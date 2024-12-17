@@ -42,39 +42,21 @@ splash.append(cat_sprite)
 frame = 0
 speed = 2  # Speed of movement
 
-button_pressed = "K_LEFT"
 while True:
-    if display.check_quit():
-        break
-
-    # Handle events
-    if button_pressed == "NONE":
-        pass
-    elif button_pressed == "K_LEFT":
-        cat_sprite.x -= speed
-    elif button_pressed == "K_RIGHT":
-        cat_sprite.x += speed
 
     for event in pygame.event.get():
-        print(event)
-    # for event in pygame.event.get():
-    #     print(event)
-    #     print(event.type)
-    #     print("yoloswagmoney")
-        # if event.type == pygame.QUIT:
-        #     pygame.quit()
-        #     exit()
-        # elif event.type == pygame.KEYDOWN:
-        #     if event.key == pygame.K_LEFT:
-        #         cat_sprite.x -= speed
-        #     elif event.key == pygame.K_RIGHT:
-        #         cat_sprite.x += speed
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            exit()
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                cat_sprite.x -= speed
+            elif event.key == pygame.K_RIGHT:
+                cat_sprite.x += speed
 
     # Update the tile index to animate the sprite
     cat_sprite[0] = frame
     frame = (frame + 1) % (cat_sheet.width // tile_width)
-
-    
 
     # Delay to control animation speed
     time.sleep(0.1)
