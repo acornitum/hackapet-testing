@@ -5,7 +5,6 @@ import busio
 import time
 import adafruit_imageload
 from adafruit_ssd1351 import SSD1351
-import random
 
 displayio.release_displays()
 spi = busio.SPI(clock=board.SCK, MOSI=board.MOSI)
@@ -38,8 +37,6 @@ forest_bg_sprite = displayio.TileGrid(forest_bg, pixel_shader=getattr(forest_bg,
 
 group.append(forest_bg_sprite)
 
-# cat!!!!!!!!
-
 cat_filename = "/images/cat_sheet_pbg.bmp"
 
 cat_img, cat_pal = adafruit_imageload.load(cat_filename)
@@ -59,63 +56,16 @@ cat_tilegrid = displayio.TileGrid(
 
 group.append(cat_tilegrid)
 
-# fireballs !!!!!!!!!
-
-fireball_file = "/images/fireball.bmp"
-
-fireball_img, fireball_pal = adafruit_imageload.load(fireball_file)
-
-fireball_pal.make_transparent(1)
-
-fireballs = []
-
-def spawn_fireball():
-    x_position = random.randint(0, 128 - 32)
-    fireball = displayio.TileGrid(
-        fireball_img,
-        pixel_shader=fireball_pal,
-        width=1,
-        height=1,
-        tile_width=32,
-        tile_height=32,
-        x=x_position,
-        y=-32
-    )
-    fireballs.append(fireball)
-    group.append(fireball)
-
-def check_collision(sprite1, sprite2):
-    return (
-        sprite1.x < sprite2.x + 32 and
-        sprite1.x + 32 > sprite2.x and
-        sprite1.y < sprite2.y + 32 and
-        sprite1.y + 32 > sprite2.y
-    )
-
-
 frame = 0
-frame_time = 0
 speed = 2
-game_over = False
+
+frame_time = 0
 
 while True:
     if not lbtn.value:
         cat_tilegrid.x -= speed
     elif not rbtn.value:
         cat_tilegrid.x += speed
-        
-    if random.random() < 0.01:  # spawn rate
-        spawn_fireball()
-
-
-    for fireball in fireballs:
-        fireball.y += 2
-        if fireball.y > display.height:
-            group.remove(fireball)
-            fireballs.remove(fireball)
-        elif check_collision(cat_tilegrid, fireball):
-            game_over = True
-            #display_game_over()
 
     frame_time += 1
     if frame_time >= 10:
@@ -124,4 +74,4 @@ while True:
         frame_time = 0
 
     time.sleep(0.01)
-
+    pass
