@@ -16,6 +16,9 @@ reset_pin = board.GP5
 rbtn = digitalio.DigitalInOut(board.BTNR)
 rbtn.pull = digitalio.Pull.UP
 
+mbtn = digitalio.DigitalInOut(board.BTNM)
+mbtn.pull = digitalio.Pull.UP
+
 lbtn = digitalio.DigitalInOut(board.BTNL)
 lbtn.pull = digitalio.Pull.UP
 
@@ -92,6 +95,12 @@ def check_collision(sprite1, sprite2):
         sprite1.y + 32 > sprite2.y
     )
 
+# game over ??????
+
+def display_game_over():
+    for i in fireballs:
+        group.remove(i)
+    fireballs.clear()
 
 frame = 0
 frame_time = 0
@@ -99,13 +108,18 @@ speed = 2
 game_over = False
 
 while True:
-    if not lbtn.value:
-        cat_tilegrid.x -= speed
-    elif not rbtn.value:
-        cat_tilegrid.x += speed
+    
+    if game_over == False:
+        if not lbtn.value:
+            cat_tilegrid.x -= speed
+        elif not rbtn.value:
+            cat_tilegrid.x += speed
         
-    if random.random() < 0.01:  # spawn rate
-        spawn_fireball()
+        if random.random() < 0.01:  # spawn rate
+            spawn_fireball()
+
+    if not mbtn.value:
+        game_over = False
 
 
     for fireball in fireballs:
@@ -115,7 +129,7 @@ while True:
             fireballs.remove(fireball)
         elif check_collision(cat_tilegrid, fireball):
             game_over = True
-            #display_game_over()
+            display_game_over()
 
     frame_time += 1
     if frame_time >= 10:
