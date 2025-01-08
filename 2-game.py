@@ -97,7 +97,23 @@ def check_collision(sprite1, sprite2):
 
 # game over ??????
 
+restart_filename = open("/images/restart.bmp", "rb")
+restart_file = displayio.OnDiskBitmap(restart_filename)
+
 def display_game_over():
+    global restart
+    restart = displayio.TileGrid(
+        restart_file,
+        pixel_shader=restart_file.pixel_shader,
+        width=1,
+        height=1,
+        tile_width=64,
+        tile_height=32,
+        default_tile=0,
+        x=(display.width - 64) // 2,  
+        y=(display.height - 32) // 2  
+    )
+    group.append(restart)
     for i in fireballs:
         group.remove(i)
     fireballs.clear()
@@ -118,9 +134,9 @@ while True:
         if random.random() < 0.01:  # spawn rate
             spawn_fireball()
 
-    if not mbtn.value:
+    if not mbtn.value and game_over == True:
+        group.remove(restart)
         game_over = False
-
 
     for fireball in fireballs:
         fireball.y += 2
